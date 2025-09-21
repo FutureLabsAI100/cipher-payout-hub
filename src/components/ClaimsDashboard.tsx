@@ -6,13 +6,97 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Eye, EyeOff, Wallet, Shield, FileText, DollarSign } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { Eye, EyeOff, Wallet, Shield, FileText, DollarSign, Loader2, CheckCircle2 } from 'lucide-react';
 
 const ClaimsDashboard = () => {
   const [showSensitive, setShowSensitive] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    claimantName: 'John Smith',
+    policyNumber: 'POL-789456123',
+    ssn: '***-**-1234',
+    claimType: '',
+    incidentDate: '',
+    claimAmount: '',
+    description: ''
+  });
+  const { toast } = useToast();
 
   const toggleSensitiveData = () => setShowSensitive(!showSensitive);
+
+  const handleWalletConnect = () => {
+    setWalletConnected(!walletConnected);
+    if (!walletConnected) {
+      toast({
+        title: "Wallet Connected Successfully",
+        description: "Your secure wallet has been connected. You can now submit encrypted claims.",
+        className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200"
+      });
+    } else {
+      toast({
+        title: "Wallet Disconnected",
+        description: "Your wallet has been safely disconnected.",
+      });
+    }
+  };
+
+  const validateForm = () => {
+    const errors = [];
+    if (!formData.claimantName.trim()) errors.push("Claimant name is required");
+    if (!formData.policyNumber.trim()) errors.push("Policy number is required");
+    if (!formData.claimType) errors.push("Claim type is required");
+    if (!formData.incidentDate) errors.push("Incident date is required");
+    if (!formData.claimAmount.trim()) errors.push("Claim amount is required");
+    if (!formData.description.trim()) errors.push("Incident description is required");
+    return errors;
+  };
+
+  const handleSubmitClaim = async () => {
+    const errors = validateForm();
+    if (errors.length > 0) {
+      toast({
+        title: "Form Validation Error",
+        description: errors[0],
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    // Simulate encryption and submission process
+    toast({
+      title: "Encrypting Claim Data",
+      description: "Your sensitive information is being encrypted...",
+      className: "bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200"
+    });
+
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    toast({
+      title: "Claim Submitted Successfully",
+      description: "Your encrypted claim has been securely submitted and assigned ID: CLM-004",
+      className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200"
+    });
+
+    // Reset form
+    setFormData({
+      ...formData,
+      claimType: '',
+      incidentDate: '',
+      claimAmount: '',
+      description: ''
+    });
+    
+    setIsSubmitting(false);
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   return (
     <div className="container mx-auto px-6 py-8 space-y-8">
@@ -29,11 +113,21 @@ const ClaimsDashboard = () => {
         </CardHeader>
         <CardContent className="text-center">
           <Button 
-            onClick={() => setWalletConnected(!walletConnected)}
+            onClick={handleWalletConnect}
             variant={walletConnected ? "secondary" : "default"}
             className="w-full max-w-sm"
           >
-            {walletConnected ? "Wallet Connected ✓" : "Connect Wallet"}
+            {walletConnected ? (
+              <>
+                <CheckCircle2 className="w-4 h-4 mr-2" />
+                Wallet Connected
+              </>
+            ) : (
+              <>
+                <Wallet className="w-4 h-4 mr-2" />
+                Connect Secure Wallet
+              </>
+            )}
           </Button>
           {walletConnected && (
             <p className="text-sm text-muted-foreground mt-2">
@@ -72,7 +166,8 @@ const ClaimsDashboard = () => {
               <Input 
                 id="claimant-name" 
                 className={!showSensitive ? "blur-sensitive" : ""}
-                defaultValue="John Smith"
+                value={formData.claimantName}
+                onChange={(e) => handleInputChange('claimantName', e.target.value)}
               />
             </div>
 
@@ -81,7 +176,8 @@ const ClaimsDashboard = () => {
               <Input 
                 id="policy-number" 
                 className={!showSensitive ? "blur-sensitive" : ""}
-                defaultValue="POL-789456123"
+                value={formData.policyNumber}
+                onChange={(e) => handleInputChange('policyNumber', e.target.value)}
               />
             </div>
 
@@ -90,13 +186,14 @@ const ClaimsDashboard = () => {
               <Input 
                 id="ssn" 
                 className={!showSensitive ? "blur-sensitive" : ""}
-                defaultValue="***-**-1234"
+                value={formData.ssn}
+                onChange={(e) => handleInputChange('ssn', e.target.value)}
               />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="claim-type">Claim Type</Label>
-              <Select>
+              <Select value={formData.claimType} onValueChange={(value) => handleInputChange('claimType', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select claim type" />
                 </SelectTrigger>
@@ -111,7 +208,12 @@ const ClaimsDashboard = () => {
 
             <div className="space-y-2">
               <Label htmlFor="incident-date">Incident Date</Label>
-              <Input type="date" id="incident-date" />
+              <Input 
+                type="date" 
+                id="incident-date" 
+                value={formData.incidentDate}
+                onChange={(e) => handleInputChange('incidentDate', e.target.value)}
+              />
             </div>
 
             <div className="space-y-2">
@@ -122,6 +224,8 @@ const ClaimsDashboard = () => {
                   id="claim-amount" 
                   className="pl-10"
                   placeholder="0.00"
+                  value={formData.claimAmount}
+                  onChange={(e) => handleInputChange('claimAmount', e.target.value)}
                 />
               </div>
             </div>
@@ -132,15 +236,27 @@ const ClaimsDashboard = () => {
                 id="description" 
                 placeholder="Provide detailed description of the incident..."
                 className="h-24"
+                value={formData.description}
+                onChange={(e) => handleInputChange('description', e.target.value)}
               />
             </div>
 
             <Button 
               className="w-full gradient-secure shadow-glow"
-              disabled={!walletConnected}
+              disabled={!walletConnected || isSubmitting}
+              onClick={handleSubmitClaim}
             >
-              <Shield className="w-4 h-4 mr-2" />
-              Submit Encrypted Claim
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Encrypting & Submitting...
+                </>
+              ) : (
+                <>
+                  <Shield className="w-4 h-4 mr-2" />
+                  Submit Encrypted Claim
+                </>
+              )}
             </Button>
           </CardContent>
         </Card>

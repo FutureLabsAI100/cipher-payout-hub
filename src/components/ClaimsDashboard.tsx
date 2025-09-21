@@ -6,8 +6,10 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, Wallet, Shield, FileText, DollarSign, Loader2, CheckCircle2 } from 'lucide-react';
+import { ContractInteraction } from './ContractInteraction';
+import { Eye, EyeOff, Wallet, Database, FileText, DollarSign, Loader2, CheckCircle2, Key } from 'lucide-react';
 
 const ClaimsDashboard = () => {
   const [showSensitive, setShowSensitive] = useState(false);
@@ -100,66 +102,114 @@ const ClaimsDashboard = () => {
 
   return (
     <div className="container mx-auto px-6 py-8 space-y-8">
-      {/* Wallet Connection */}
-      <Card className="gradient-card shadow-card border-accent/20">
-        <CardHeader className="text-center">
-          <div className="flex items-center justify-center space-x-2 mb-2">
-            <Wallet className="w-6 h-6 text-accent" />
-            <CardTitle className="text-primary">Wallet Connection Required</CardTitle>
-          </div>
-          <CardDescription>
-            Connect your secure wallet to submit and manage insurance claims
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="text-center">
-          <Button 
-            onClick={handleWalletConnect}
-            variant={walletConnected ? "secondary" : "default"}
-            className="w-full max-w-sm"
-          >
-            {walletConnected ? (
-              <>
-                <CheckCircle2 className="w-4 h-4 mr-2" />
-                Wallet Connected
-              </>
-            ) : (
-              <>
-                <Wallet className="w-4 h-4 mr-2" />
-                Connect Secure Wallet
-              </>
-            )}
-          </Button>
-          {walletConnected && (
-            <p className="text-sm text-muted-foreground mt-2">
-              Wallet: 0x1234...5678 <Badge variant="outline" className="ml-2">Verified</Badge>
-            </p>
-          )}
-        </CardContent>
-      </Card>
+      {/* Main Dashboard */}
+      <Tabs defaultValue="payouts" className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="payouts" className="flex items-center gap-2">
+            <Database className="h-4 w-4" />
+            FHE Payouts
+          </TabsTrigger>
+          <TabsTrigger value="claims" className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            Claims
+          </TabsTrigger>
+          <TabsTrigger value="contract" className="flex items-center gap-2">
+            <Key className="h-4 w-4" />
+            Contract
+          </TabsTrigger>
+        </TabsList>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Claims Form */}
-        <Card className="gradient-card shadow-card">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <FileText className="w-5 h-5 text-primary" />
-                <CardTitle className="text-primary">Submit New Claim</CardTitle>
+        <TabsContent value="payouts" className="space-y-6">
+          <Card className="gradient-card shadow-card border-accent/20">
+            <CardHeader className="text-center">
+              <div className="flex items-center justify-center space-x-2 mb-2">
+                <Database className="w-6 h-6 text-accent" />
+                <CardTitle className="text-primary">FHE-Encrypted Payout Management</CardTitle>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={toggleSensitiveData}
-                className="flex items-center space-x-1"
+              <CardDescription>
+                Manage payouts with fully homomorphic encryption for maximum privacy
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-center">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="p-4 bg-white/50 rounded-lg">
+                  <div className="text-2xl font-bold text-primary">$2.4M</div>
+                  <div className="text-sm text-muted-foreground">Total Processed</div>
+                </div>
+                <div className="p-4 bg-white/50 rounded-lg">
+                  <div className="text-2xl font-bold text-primary">1,247</div>
+                  <div className="text-sm text-muted-foreground">Payouts</div>
+                </div>
+                <div className="p-4 bg-white/50 rounded-lg">
+                  <div className="text-2xl font-bold text-primary">99.9%</div>
+                  <div className="text-sm text-muted-foreground">Success Rate</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="claims" className="space-y-6">
+          {/* Wallet Connection */}
+          <Card className="gradient-card shadow-card border-accent/20">
+            <CardHeader className="text-center">
+              <div className="flex items-center justify-center space-x-2 mb-2">
+                <Wallet className="w-6 h-6 text-accent" />
+                <CardTitle className="text-primary">Wallet Connection Required</CardTitle>
+              </div>
+              <CardDescription>
+                Connect your secure wallet to submit and manage insurance claims
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-center">
+              <Button 
+                onClick={handleWalletConnect}
+                variant={walletConnected ? "secondary" : "default"}
+                className="w-full max-w-sm"
               >
-                {showSensitive ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                <span>{showSensitive ? "Hide" : "Show"} Sensitive</span>
+                {walletConnected ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                    Wallet Connected
+                  </>
+                ) : (
+                  <>
+                    <Wallet className="w-4 h-4 mr-2" />
+                    Connect Secure Wallet
+                  </>
+                )}
               </Button>
-            </div>
-            <CardDescription>
-              All data is encrypted and visible only to authorized adjusters
-            </CardDescription>
-          </CardHeader>
+              {walletConnected && (
+                <p className="text-sm text-muted-foreground mt-2">
+                  Wallet: 0x1234...5678 <Badge variant="outline" className="ml-2">Verified</Badge>
+                </p>
+              )}
+            </CardContent>
+          </Card>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Claims Form */}
+            <Card className="gradient-card shadow-card">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <FileText className="w-5 h-5 text-primary" />
+                    <CardTitle className="text-primary">Submit New Claim</CardTitle>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={toggleSensitiveData}
+                    className="flex items-center space-x-1"
+                  >
+                    {showSensitive ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    <span>{showSensitive ? "Hide" : "Show"} Sensitive</span>
+                  </Button>
+                </div>
+                <CardDescription>
+                  All data is encrypted and visible only to authorized adjusters
+                </CardDescription>
+              </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="claimant-name">Claimant Name</Label>
@@ -294,6 +344,12 @@ const ClaimsDashboard = () => {
           </CardContent>
         </Card>
       </div>
+        </TabsContent>
+
+        <TabsContent value="contract" className="space-y-6">
+          <ContractInteraction />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

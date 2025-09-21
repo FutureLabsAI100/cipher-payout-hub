@@ -1,6 +1,5 @@
-import { Shield, Lock, FileText } from 'lucide-react';
+import { Key, Database, Zap, Wallet } from 'lucide-react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import logo from '@/assets/insurance-logo.png';
 
 const Header = () => {
   return (
@@ -9,7 +8,9 @@ const Header = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-3">
-              <img src={logo} alt="Cipher Payout Hub" className="w-10 h-10" />
+              <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center">
+                <Key className="w-6 h-6 text-white" />
+              </div>
               <div>
                 <h1 className="text-xl font-bold">Cipher Payout Hub</h1>
                 <p className="text-sm opacity-90">FHE-Encrypted Payout Management</p>
@@ -19,18 +20,18 @@ const Header = () => {
           
           <div className="flex items-center space-x-6">
             <div className="flex items-center space-x-2 bg-white/10 px-3 py-2 rounded-lg">
-              <Shield className="w-4 h-4 animate-shield" />
-              <span className="text-sm font-medium">FHE Secure</span>
+              <Database className="w-4 h-4" />
+              <span className="text-sm font-medium">FHE Encrypted</span>
             </div>
             
             <div className="flex items-center space-x-2 bg-white/10 px-3 py-2 rounded-lg">
-              <Lock className="w-4 h-4" />
-              <span className="text-sm font-medium">Encrypted</span>
+              <Zap className="w-4 h-4" />
+              <span className="text-sm font-medium">Fast Processing</span>
             </div>
             
             <div className="flex items-center space-x-2 bg-accent/20 px-3 py-2 rounded-lg">
-              <FileText className="w-4 h-4" />
-              <span className="text-sm font-medium">Payout Portal</span>
+              <Wallet className="w-4 h-4" />
+              <span className="text-sm font-medium">Multi-Wallet</span>
             </div>
             
             <ConnectButton />

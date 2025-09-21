@@ -1,4 +1,4 @@
-import { Shield, Lock, FileText, Phone, Mail, MapPin } from 'lucide-react';
+import { Database, Lock, FileText, Phone, Mail, MapPin } from 'lucide-react';
 
 const Footer = () => {
   const umbrellaPositions = [
@@ -37,13 +37,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <h3 className="text-lg font-bold">SecureGuard Insurance</h3>
+            <h3 className="text-lg font-bold">Cipher Payout Hub</h3>
             <p className="text-sm opacity-90">
-              Protecting your assets with state-of-the-art encryption and secure claim processing.
+              Decentralized payout management with FHE encryption for maximum privacy and security.
             </p>
             <div className="flex items-center space-x-2">
-              <Shield className="w-4 h-4 text-accent" />
-              <span className="text-sm">SOC 2 Compliant</span>
+              <Database className="w-4 h-4 text-accent" />
+              <span className="text-sm">FHE Encrypted</span>
             </div>
           </div>
 
@@ -60,8 +60,8 @@ const Footer = () => {
                 <span>Encrypted Storage</span>
               </li>
               <li className="flex items-center space-x-2">
-                <Shield className="w-3 h-3" />
-                <span>Security Audits</span>
+                <Database className="w-3 h-3" />
+                <span>FHE Processing</span>
               </li>
             </ul>
           </div>
@@ -107,7 +107,7 @@ const Footer = () => {
 
         <div className="border-t border-white/20 mt-8 pt-8 text-center">
           <p className="text-sm opacity-75">
-            © 2024 SecureGuard Insurance. All rights reserved. | Protected by advanced encryption
+            © 2024 Cipher Payout Hub. All rights reserved. | Protected by FHE encryption
           </p>
         </div>
       </div>

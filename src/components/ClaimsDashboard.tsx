@@ -303,7 +303,7 @@ const ClaimsDashboard = () => {
                 </>
               ) : (
                 <>
-                  <Shield className="w-4 h-4 mr-2" />
+                  <Database className="w-4 h-4 mr-2" />
                   Submit Encrypted Claim
                 </>
               )}
